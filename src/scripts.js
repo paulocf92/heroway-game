@@ -141,28 +141,40 @@ function createBoard() {
   }
 }
 
+function placeEntities(item, quantity) {
+  if (!['mini-demon', 'chest', 'trap'].includes(item)) return;
+
+  let top = 0;
+  let left = 0;
+
+  for (let i=0; i<quantity; i++) {
+    top = TILE_SIZE * (Math.floor(Math.random() * 14) + 2);
+    left = TILE_SIZE * (Math.floor(Math.random() * 16) + 2);
+
+    if (item === 'mini-demon') {
+      board.createEnemy({ item, top, left });
+    } else {
+      board.createItem({ item, top, left });
+    }
+  }
+}
+
 const board = createBoard();
+const entities = ['chest', 'trap', 'mini-demon'];
 
-board.createItem({ item: 'trap', top: TILE_SIZE * 10, left: TILE_SIZE * 10 });
-board.createItem({ item: 'chest', top: TILE_SIZE * 2, left: TILE_SIZE * 18 });
-
+// Base entities
 board.createItem({ item: 'forniture', top: TILE_SIZE * 17, left: TILE_SIZE * 2 });
 board.createItem({ item: 'forniture', top: TILE_SIZE * 2, left: TILE_SIZE * 8 });
 board.createItem({ item: 'forniture', top: TILE_SIZE * 2, left: TILE_SIZE * 16 });
 board.createItem({ item: 'forniture', top: TILE_SIZE * 2, left: TILE_SIZE * 3 });
 
-board.createEnemy({ top: TILE_SIZE * 5, left: TILE_SIZE * 16 });
-board.createEnemy({ top: TILE_SIZE * 6, left: TILE_SIZE * 16 });
-board.createEnemy({ top: TILE_SIZE * 7, left: TILE_SIZE * 16 });
-board.createEnemy({ top: TILE_SIZE * 8, left: TILE_SIZE * 16 });
-board.createEnemy({ top: TILE_SIZE * 9, left: TILE_SIZE * 16 });
-board.createEnemy({ top: TILE_SIZE * 8, left: TILE_SIZE * 16 });
-board.createEnemy({ top: TILE_SIZE * 7, left: TILE_SIZE * 16 });
-board.createEnemy({ top: TILE_SIZE * 6, left: TILE_SIZE * 16 });
-board.createEnemy({ top: TILE_SIZE * 5, left: TILE_SIZE * 16 });
-board.createEnemy({ top: TILE_SIZE * 6, left: TILE_SIZE * 16 });
-board.createEnemy({ top: TILE_SIZE * 7, left: TILE_SIZE * 16 });
-board.createEnemy({ top: TILE_SIZE * 8, left: TILE_SIZE * 16 });
-
+// Hero
 board.createHero({ top: TILE_SIZE * 16, left: TILE_SIZE * 2 });
+
+// Dynamic entities
+entities.forEach(entity => {
+  // Place only 1 chest, otherwise n+2 entities
+  const quantity = entity !== 'chest' ? Math.floor(Math.random() * 15) + 2 : 1;
+  placeEntities(entity, quantity);
+});
 
